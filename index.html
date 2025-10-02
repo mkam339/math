@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>منصة الرياضيات</title>
+<style>
+:root{
+  --bg: radial-gradient(1200px 800px at 80% -20%, #b3e9ff55, transparent 60%),
+        radial-gradient(800px 600px at 10% 120%, #e3d0ff55, transparent 50%),
+        #f7fbff;
+  --panel:#ffffffd9;--card:#ffffff;--ink:#0f172a;--muted:#475569;
+  --brand:#06b6d4;--accent:#8b5cf6;--ring:#e5e7eb;--shadow:0 10px 40px rgba(2,6,23,.08);
+}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:inherit;text-decoration:none}.wrap{max-width:1200px;margin:0 auto;padding:16px}
+.glass{backdrop-filter:blur(8px);background:var(--panel);border:1px solid var(--ring);box-shadow:var(--shadow);border-radius:16px}
+.header{position:sticky;top:0;z-index:50;margin:12px;padding:10px 14px}.header-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:54px;height:54px;border-radius:16px;border:1px solid var(--ring);object-fit:cover;box-shadow:inset 0 0 20px #9ae6b4}
+h1{margin:0;font-size:20px}.badge{display:none;font-size:11px;background:linear-gradient(90deg,#99f6e4,#ddd6fe);color:#0f172a;border:1px solid #c7d2fe;padding:4px 10px;border-radius:999px}
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+input[type="text"],input[type="email"],input[type="password"],select{border:1px solid var(--ring);background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font-size:14px;outline:none;min-width:160px}
+.btn{background:linear-gradient(90deg,var(--brand),var(--accent));color:#fff;border:none;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:700}
+.btn.secondary{background:#eef2ff;color:#3b0764;border:1px solid #c7d2fe}.btn.ghost{background:transparent;color:#334155;border:1px dashed var(--ring)}
+.grid{display:grid;gap:16px;margin:16px 12px}@media(min-width:1000px){.grid{grid-template-columns:1.5fr .5fr}}
+.panel .head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ring)}.panel .body{padding:16px}
+.post{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:14px;border-bottom:1px solid var(--ring)}.post:last-child{border-bottom:0}
+.avatar{width:42px;height:42px;border-radius:999px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:800;color:#0f172a}
+.meta{font-size:12px;color:#64748b}.tag{font-size:11px;background:#e0f2fe;color:#155e75;border:1px solid #bae6fd;border-radius:999px;padding:3px 8px;margin-inline-start:6px}
+.media{margin-top:10px;border-radius:14px;overflow:hidden;border:1px solid var(--ring)}.media iframe,.media img,.media video{width:100%;height:auto;display:block}
+.empty{text-align:center;color:#64748b;padding:24px}
+.list li{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--ring)}.list li:last-child{border-bottom:0}
+.pill{padding:4px 8px;border-radius:999px;background:#f1f5f9;color:#0f172a;font-size:12px;border:1px solid var(--ring)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1 1 180px}
+.tool{display:flex;gap:6px;margin-top:8px}.tool .mini{font-size:12px;padding:6px 10px;border-radius:10px;border:1px solid var(--ring);background:#fff}
+dialog{border:none;border-radius:16px;max-width:760px;width:96vw;padding:0;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(2,6,23,.25)}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ring)}.dialog-body{padding:16px}
+.toast{position:fixed;inset-inline-start:50%;bottom:20px;transform:translateX(-50%);background:#06b6d4;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);display:none;z-index:100}
+</style>
+</head><body>
+<div class="header glass"><div class="header-inner">
+  <div class="brand">
+    <img class="logo" id="schoolLogo" alt="LOGO"/>
+    <div><h1>منصة الرياضيات <span id="adminBadge" class="badge">مشرف مفعل</span></h1><div class="muted" id="userLine">غير مسجل دخول</div></div>
+  </div>
+  <div class="controls">
+    <input id="search" type="text" placeholder="ابحث في المنشورات"/>
+    <select id="typeFilter"><option value="">الكل</option><option>عام</option><option>سؤال</option><option>تذكير</option><option>فيديو</option><option>صور</option><option>ملف</option><option>إعلان</option></select>
+    <button class="btn secondary" id="btnAssignments">الواجبات</button>
+    <button class="btn secondary" id="btnExams">الاختبارات</button>
+    <button class="btn" id="btnLogin">تسجيل الدخول</button>
+    <button class="btn ghost" id="btnLogout" style="display:none">تسجيل الخروج</button>
+  </div>
+</div></div>
+
+<div class="wrap"><div class="grid">
+  <section class="panel glass" id="feedPanel">
+    <div class="head"><strong>المنشورات</strong><span class="muted" id="count"></span></div>
+    <div class="body" id="feed"></div>
+  </section>
+  <aside class="panel glass">
+    <div class="head"><strong>إجراءات المشرف</strong></div>
+    <div class="body">
+      <div class="muted">تظهر الأزرار التالية للمشرف فقط. أي تعديل يظهر للجميع فورًا.</div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn admin-only" id="openCreatePost" style="display:none">+ منشور</button>
+        <button class="btn admin-only" id="openCreateAssign" style="display:none">+ واجب</button>
+        <button class="btn admin-only" id="openCreateExam" style="display:none">+ اختبار</button>
+      </div>
+    </div>
+  </aside>
+</div></div>
+
+<dialog class="glass" id="dlgAuth"><div class="dialog-head"><strong>تسجيل دخول المشرف</strong><button class="btn ghost" onclick="dlgAuth.close()">إغلاق</button></div>
+  <div class="dialog-body"><form id="formAuth">
+    <div class="row"><input id="authEmail" type="email" placeholder="بريد المشرف" required/><input id="authPass" type="password" placeholder="كلمة المرور" required/></div>
+    <div class="row"><button class="btn" type="submit">دخول</button></div>
+  </form></div>
+</dialog>
+
+<dialog class="glass" id="dlgPost"><div class="dialog-head"><strong id="postDlgTitle">منشور جديد</strong><button class="btn ghost" onclick="dlgPost.close()">إغلاق</button></div>
+  <div class="dialog-body"><form id="formPost">
+    <input type="hidden" id="postId"/>
+    <div class="row"><input type="text" id="postText" placeholder="نص المنشور" required/></div>
+    <div class="row"><input type="text" id="postMedia" placeholder="رابط صورة/فيديو/رابط (اختياري)"/><select id="postType"><option>عام</option><option>سؤال</option><option>تذكير</option><option>فيديو</option><option>صور</option><option>ملف</option><option>إعلان</option></select></div>
+    <div class="row"><input type="file" id="postFile" accept="image/*,video/*"/></div>
+    <div class="row"><button class="btn" type="submit">حفظ</button></div>
+  </form></div>
+</dialog>
+
+<dialog class="glass" id="dlgAssign"><div class="dialog-head"><strong id="assignDlgTitle">إضافة واجب</strong><button class="btn ghost" onclick="dlgAssign.close()">إغلاق</button></div>
+  <div class="dialog-body"><form id="formAssign">
+    <input type="hidden" id="assignId"/>
+    <div class="row"><input type="text" id="assignTitle" placeholder="عنوان الواجب" required/></div>
+    <div class="row"><input type="text" id="assignGrade" placeholder="الصف/الفصل" required/><input type="date" id="assignDue" required/></div>
+    <div class="row"><button class="btn" type="submit">حفظ</button></div>
+  </form></div>
+</dialog>
+
+<dialog class="glass" id="dlgExam"><div class="dialog-head"><strong id="examDlgTitle">إضافة اختبار</strong><button class="btn ghost" onclick="dlgExam.close()">إغلاق</button></div>
+  <div class="dialog-body"><form id="formExam">
+    <input type="hidden" id="examId"/>
+    <div class="row"><input type="text" id="examTitle" placeholder="عنوان الاختبار" required/></div>
+    <div class="row"><input type="date" id="examDate" required/><input type="text" id="examWeight" placeholder="الوزن (مثال 30%)"/></div>
+    <div class="row"><button class="btn" type="submit">حفظ</button></div>
+  </form></div>
+</dialog>
+
+<dialog class="glass" id="panelAssignments"><div class="dialog-head"><strong>الواجبات</strong><button class="btn ghost" onclick="panelAssignments.close()">إغلاق</button></div>
+  <div class="dialog-body"><ul class="list" id="listAssignments"></ul></div>
+</dialog>
+
+<dialog class="glass" id="panelExams"><div class="dialog-head"><strong>الاختبارات</strong><button class="btn ghost" onclick="panelExams.close()">إغلاق</button></div>
+  <div class="dialog-body"><ul class="list" id="listExams"></ul></div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_AUTH_DOMAIN",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE_STORAGE_BUCKET",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId: "PASTE_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+const adminBadge = document.getElementById("adminBadge");
+const userLine = document.getElementById("userLine");
+const schoolLogo = document.getElementById("schoolLogo");
+schoolLogo.src="";
+
+const feed = document.getElementById("feed");
+const count = document.getElementById("count");
+const search = document.getElementById("search");
+const typeFilter = document.getElementById("typeFilter");
+
+const btnAssignments = document.getElementById("btnAssignments");
+const btnExams = document.getElementById("btnExams");
+const panelAssignments = document.getElementById("panelAssignments");
+const panelExams = document.getElementById("panelExams");
+const listAssignments = document.getElementById("listAssignments");
+const listExams = document.getElementById("listExams");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnLogout = document.getElementById("btnLogout");
+const dlgAuth = document.getElementById("dlgAuth");
+const formAuth = document.getElementById("formAuth");
+const authEmail = document.getElementById("authEmail");
+const authPass = document.getElementById("authPass");
+
+const openCreatePost = document.getElementById("openCreatePost");
+const openCreateAssign = document.getElementById("openCreateAssign");
+const openCreateExam = document.getElementById("openCreateExam");
+const dlgPost = document.getElementById("dlgPost");
+const dlgAssign = document.getElementById("dlgAssign");
+const dlgExam = document.getElementById("dlgExam");
+
+const formPost = document.getElementById("formPost");
+const postText = document.getElementById("postText");
+const postMedia = document.getElementById("postMedia");
+const postType = document.getElementById("postType");
+const postFile = document.getElementById("postFile");
+const postId = document.getElementById("postId");
+const postDlgTitle = document.getElementById("postDlgTitle");
+
+const formAssign = document.getElementById("formAssign");
+const assignTitle = document.getElementById("assignTitle");
+const assignGrade = document.getElementById("assignGrade");
+const assignDue = document.getElementById("assignDue");
+const assignId = document.getElementById("assignId");
+const assignDlgTitle = document.getElementById("assignDlgTitle");
+
+const formExam = document.getElementById("formExam");
+const examTitle = document.getElementById("examTitle");
+const examDate = document.getElementById("examDate");
+const examWeight = document.getElementById("examWeight");
+const examId = document.getElementById("examId");
+const examDlgTitle = document.getElementById("examDlgTitle");
+
+function toast(msg, ok=false){ const t=document.getElementById('toast'); t.style.background= ok? '#10b981' : '#06b6d4'; t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2200); }
+
+let isAdmin=false;
+async function checkAdmin(email){
+  try{ const s=await getDoc(doc(db,"config","admins")); const emails=s.exists()?(s.data().emails||[]):[]; return !!email && emails.includes(email); }
+  catch{ return false }
+}
+function setAdminUI(on){
+  isAdmin=!!on; adminBadge.style.display=on?'inline-flex':'none';
+  document.querySelectorAll(".admin-only").forEach(el=>el.style.display=on?'inline-flex':'none');
+}
+
+btnLogin.addEventListener("click",()=>dlgAuth.showModal());
+btnLogout.addEventListener("click",async()=>{ await signOut(auth); toast("تم تسجيل الخروج",true); });
+formAuth.addEventListener("submit",async e=>{
+  e.preventDefault();
+  try{ await signInWithEmailAndPassword(auth, authEmail.value, authPass.value); dlgAuth.close(); toast("تم تسجيل الدخول",true); }
+  catch(e){ toast("خطأ في الدخول"); console.error(e); }
+});
+onAuthStateChanged(auth, async user=>{
+  const email=user?.email||""; userLine.textContent=user?("سجّل الدخول: "+email):"غير مسجل دخول";
+  btnLogin.style.display=user?"none":"inline-flex"; btnLogout.style.display=user?"inline-flex":"none";
+  const admin=await checkAdmin(email); setAdminUI(admin);
+});
+
+let allPosts=[];
+function avatar(name){return (name||"").trim().slice(0,1)||"م"}
+function fmtDate(ts){ if(!ts) return ""; const d=ts.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})+" "+d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'}) }
+function mediaHtml(url){ if(!url) return ""; try{ const u=new URL(url); if(u.host.includes("youtube.com")||u.host.includes("youtu.be")){ let id=u.searchParams.get("v")||u.pathname.split("/").pop(); return `<div class="media"><iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe></div>`; } }catch{} if(/\.(jpg|jpeg|png|gif|webp)$/i.test(url)) return `<div class="media"><img src="${url}" alt=""></div>`; if(/\.(mp4|webm|ogg)$/i.test(url)) return `<div class="media"><video controls src="${url}"></video></div>`; return `<div class="media"><a href="${url}" target="_blank" rel="noopener">فتح الرابط</a></div>` }
+function adminTools(type,id,item){
+  if(!isAdmin) return "";
+  if(type==="post") return `<div class="tool"><button class="mini" data-ed="post" data-id="${id}">تعديل</button><button class="mini" data-del="post" data-id="${id}">حذف</button></div>`;
+  if(type==="assign") return `<div class="tool"><button class="mini" data-ed="assign" data-id="${id}">تعديل</button><button class="mini" data-del="assign" data-id="${id}">حذف</button></div>`;
+  if(type==="exam") return `<div class="tool"><button class="mini" data-ed="exam" data-id="${id}">تعديل</button><button class="mini" data-del="exam" data-id="${id}">حذف</button></div>`;
+  return "";
+}
+function renderFeed(){
+  const q=(search.value||"").trim(); const t=(typeFilter.value||"");
+  let list=allPosts.filter(p=>(!t||p.type===t)&&((p.text||"")+(p.author||"")).includes(q));
+  feed.innerHTML=""; if(list.length===0){ feed.innerHTML='<div class="empty">لا توجد منشورات</div>'; }
+  list.forEach(p=>{
+    const el=document.createElement("div"); el.className="post";
+    el.innerHTML=`
+      <div class="avatar">${avatar(p.author)}</div>
+      <div>
+        <div><strong>${p.author||"قسم الرياضيات"}</strong> <span class="tag">${p.type||"عام"}</span></div>
+        <div class="meta">${fmtDate(p.createdAt)}</div>
+        <div>${p.text||""}</div>
+        ${mediaHtml(p.media||"")}
+        ${adminTools("post",p.id,p)}
+      </div>`;
+    feed.appendChild(el);
+  });
+  count.textContent=list.length?("العدد: "+list.length):"";
+}
+onSnapshot(query(collection(db,"posts"), orderBy("createdAt","desc")), snap=>{ allPosts=snap.docs.map(d=>({id:d.id, ...d.data()})); renderFeed(); });
+search.addEventListener("input",renderFeed); typeFilter.addEventListener("change",renderFeed);
+
+onSnapshot(query(collection(db,"assignments"), orderBy("due","asc")), snap=>{
+  listAssignments.innerHTML=""; if(snap.empty){ listAssignments.innerHTML='<div class="empty">لا توجد واجبات</div>'; return; }
+  snap.forEach(d=>{ const a=d.data(); const li=document.createElement("li"); li.innerHTML=`<span>${a.title}<span class="muted"><br>${a.grade||""}</span></span><span class="pill">${a.due||""}</span>${adminTools("assign",d.id,a)}`; listAssignments.appendChild(li); });
+});
+onSnapshot(query(collection(db,"exams"), orderBy("date","asc")), snap=>{
+  listExams.innerHTML=""; if(snap.empty){ listExams.innerHTML='<div class="empty">لا توجد اختبارات</div>'; return; }
+  snap.forEach(d=>{ const e=d.data(); const li=document.createElement("li"); li.innerHTML=`<span>${e.title}</span><span class="pill">${e.date||""} • ${e.weight||""}</span>${adminTools("exam",d.id,e)}`; listExams.appendChild(li); });
+});
+
+btnAssignments.addEventListener("click",()=>panelAssignments.showModal());
+btnExams.addEventListener("click",()=>panelExams.showModal());
+
+function guardAdmin(){ if(!isAdmin){ toast("خاص بالمشرف فقط"); return false } return true }
+openCreatePost.addEventListener("click",()=>{ if(!guardAdmin())return; postId.value=""; postText.value=""; postMedia.value=""; postType.value="عام"; postDlgTitle.textContent="منشور جديد"; dlgPost.showModal(); });
+openCreateAssign.addEventListener("click",()=>{ if(!guardAdmin())return; assignId.value=""; assignTitle.value=""; assignGrade.value=""; assignDue.value=""; assignDlgTitle.textContent="إضافة واجب"; dlgAssign.showModal(); });
+openCreateExam.addEventListener("click",()=>{ if(!guardAdmin())return; examId.value=""; examTitle.value=""; examDate.value=""; examWeight.value=""; examDlgTitle.textContent="إضافة اختبار"; dlgExam.showModal(); });
+
+async function maybeUpload(file){ if(!file) return null; const r=ref(storage,`uploads/${Date.now()}_${file.name}`); await uploadBytes(r,file); return await getDownloadURL(r); }
+
+formPost.addEventListener("submit",async e=>{
+  e.preventDefault(); if(!guardAdmin())return;
+  try{
+    let mediaURL=(postMedia.value||"").trim(); if(postFile.files[0]) mediaURL=await maybeUpload(postFile.files[0]);
+    const data={ author: auth.currentUser?.email||"المشرف", text: postText.value.trim(), media: mediaURL, type: postType.value, createdAt: serverTimestamp() };
+    if(postId.value){ await updateDoc(doc(db,"posts",postId.value), { author:data.author, text:data.text, media:data.media, type:data.type }); toast("تم تحديث المنشور",true); }
+    else{ await addDoc(collection(db,"posts"), data); toast("تم نشر المنشور",true); }
+    dlgPost.close();
+  }catch(err){ toast("تعذر الحفظ"); console.error(err); }
+});
+formAssign.addEventListener("submit",async e=>{
+  e.preventDefault(); if(!guardAdmin())return;
+  try{
+    const data={ title: assignTitle.value.trim(), grade: assignGrade.value.trim(), due: assignDue.value };
+    if(assignId.value){ await updateDoc(doc(db,"assignments",assignId.value), data); toast("تم تحديث الواجب",true); }
+    else{ await addDoc(collection(db,"assignments"), data); toast("تم حفظ الواجب",true); }
+    dlgAssign.close();
+  }catch(err){ toast("تعذر الحفظ"); console.error(err); }
+});
+formExam.addEventListener("submit",async e=>{
+  e.preventDefault(); if(!guardAdmin())return;
+  try{
+    const data={ title: examTitle.value.trim(), date: examDate.value, weight: examWeight.value.trim() };
+    if(examId.value){ await updateDoc(doc(db,"exams",examId.value), data); toast("تم تحديث الاختبار",true); }
+    else{ await addDoc(collection(db,"exams"), data); toast("تم حفظ الاختبار",true); }
+    dlgExam.close();
+  }catch(err){ toast("تعذر الحفظ"); console.error(err); }
+});
+
+document.body.addEventListener("click",async e=>{
+  const ed=e.target.getAttribute("data-ed"); const del=e.target.getAttribute("data-del"); const id=e.target.getAttribute("data-id");
+  if(ed==="post"){ if(!guardAdmin())return; const s=allPosts.find(x=>x.id===id); if(!s)return; postId.value=id; postText.value=s.text||""; postMedia.value=s.media||""; postType.value=s.type||"عام"; postDlgTitle.textContent="تعديل منشور"; dlgPost.showModal(); }
+  if(del==="post"){ if(!guardAdmin())return; await deleteDoc(doc(db,"posts",id)); toast("تم حذف المنشور",true); }
+  if(ed==="assign"){ if(!guardAdmin())return; const dRef=doc(db,"assignments",id); const s=await getDoc(dRef); const a=s.data(); if(!a)return; assignId.value=id; assignTitle.value=a.title||""; assignGrade.value=a.grade||""; assignDue.value=a.due||""; assignDlgTitle.textContent="تعديل واجب"; dlgAssign.showModal(); }
+  if(del==="assign"){ if(!guardAdmin())return; await deleteDoc(doc(db,"assignments",id)); toast("تم حذف الواجب",true); }
+  if(ed==="exam"){ if(!guardAdmin())return; const dRef=doc(db,"exams",id); const s=await getDoc(dRef); const v=s.data(); if(!v)return; examId.value=id; examTitle.value=v.title||""; examDate.value=v.date||""; examWeight.value=v.weight||""; examDlgTitle.textContent="تعديل اختبار"; dlgExam.showModal(); }
+  if(del==="exam"){ if(!guardAdmin())return; await deleteDoc(doc(db,"exams",id)); toast("تم حذف الاختبار",true); }
+});
+</script>
+</body>
+</html>
