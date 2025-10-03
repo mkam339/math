@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -13,21 +14,23 @@ a{color:inherit;text-decoration:none}.wrap{max-width:1200px;margin:0 auto;paddin
 .brand{display:flex;align-items:center;gap:12px}.logo{width:54px;height:54px;border-radius:16px;border:1px solid var(--ring);object-fit:cover}
 h1{margin:0;font-size:20px}.badge{display:none;font-size:11px;background:linear-gradient(90deg,#99f6e4,#ddd6fe);color:#0f172a;border:1px solid #c7d2fe;padding:4px 10px;border-radius:999px}
 .controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-input[type="text"],input[type="email"],input[type="password"],input[type="date"],select{border:1px solid var(--ring);background:#fff;color:#0f172a;border-radius:12px;padding:10px 12px;font-size:14px;outline:none;min-width:160px}
+input[type="text"],input[type="email"],input[type="password"],textarea,select{border:1px solid var(--ring);background:#fff;color:#0f172a;border-radius:12px;padding:10px 12px;font-size:14px;outline:none;min-width:160px}
+textarea{min-height:84px;resize:vertical}
 input[type="file"]{font-size:13px}
 .btn{background:linear-gradient(90deg,var(--brand),var(--accent));color:#fff;border:none;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:700}
 .btn.secondary{background:#eef2ff;color:#3b0764;border:1px solid #c7d2fe}.btn.ghost{background:transparent;color:#334155;border:1px dashed var(--ring)}
 .grid{display:grid;gap:16px;margin:16px 12px}@media(min-width:1000px){.grid{grid-template-columns:1.5fr .5fr}}
 .panel .head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ring)}.panel .body{padding:16px}
-.post{display:grid;grid-template-columns:1fr;gap:6px;padding:14px;border-bottom:1px solid var(--ring)}.post:last-child{border-bottom:0}
+.post{display:grid;grid-template-columns:1fr;gap:8px;padding:14px;border-bottom:1px solid var(--ring)}.post:last-child{border-bottom:0}
 .meta{font-size:12px;color:#64748b}.tag{font-size:11px;background:#e0f2fe;color:#155e75;border:1px solid #bae6fd;border-radius:999px;padding:3px 8px;margin-inline-start:6px}
 .media{margin-top:10px;border-radius:14px;overflow:hidden;border:1px solid var(--ring)}.media iframe,.media img,.media video{width:100%;height:auto;display:block}
+.media .fallback a{display:inline-block;padding:10px}
 .empty{text-align:center;color:#64748b;padding:24px}
 .list li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px dashed var(--ring)}.list li:last-child{border-bottom:0}
 .pill{padding:4px 8px;border-radius:999px;background:#f1f5f9;color:#0f172a;font-size:12px;border:1px solid var(--ring)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.row>*{flex:1 1 180px}
 .tool{display:flex;gap:6px;margin-top:8px}.tool .mini{font-size:12px;padding:6px 10px;border-radius:10px;border:1px solid var(--ring);background:#fff;cursor:pointer}
-dialog{border:none;border-radius:16px;max-width:760px;width:96vw;padding:0;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(2,6,23,.25)}
+dialog{border:none;border-radius:16px;max-width:860px;width:96vw;padding:0;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(2,6,23,.25)}
 .dialog-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--ring)}.dialog-body{padding:16px}
 .toast{position:fixed;inset-inline-start:50%;bottom:20px;transform:translateX(-50%);background:#10b981;color:#fff;padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);display:none;z-index:100}.toast.err{background:#ef4444}
 </style>
@@ -90,7 +93,7 @@ dialog{border:none;border-radius:16px;max-width:760px;width:96vw;padding:0;box-s
     </div>
   </dialog>
 
-  <!-- Post -->
+  <!-- Post (multi attachments) -->
   <dialog class="glass" id="dlgPost">
     <div class="dialog-head"><strong id="postDlgTitle">منشور جديد</strong><button class="btn ghost" onclick="dlgPost.close()">إغلاق</button></div>
     <div class="dialog-body">
@@ -98,10 +101,10 @@ dialog{border:none;border-radius:16px;max-width:760px;width:96vw;padding:0;box-s
         <input type="hidden" id="postId"/>
         <div class="row"><input type="text" id="postText" placeholder="نص المنشور" required/></div>
         <div class="row">
-          <input type="text" id="postMedia" placeholder="رابط صورة/فيديو/ملف (اختياري)"/>
+          <textarea id="postMedia" placeholder="أضف روابط مرفقات (رابط في كل سطر) — اختياري"></textarea>
           <select id="postType"><option>عام</option><option>سؤال</option><option>تذكير</option><option>فيديو</option><option>صور</option><option>ملف</option><option>إعلان</option></select>
         </div>
-        <div class="row"><input type="file" id="postFile" accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"/></div>
+        <div class="row"><input type="file" id="postFile" multiple accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"/></div>
         <div class="row"><button class="btn" type="submit">حفظ</button></div>
       </form>
     </div>
@@ -115,8 +118,8 @@ dialog{border:none;border-radius:16px;max-width:760px;width:96vw;padding:0;box-s
         <input type="hidden" id="assignId"/>
         <div class="row"><input type="text" id="assignTitle" placeholder="عنوان الواجب" required/></div>
         <div class="row"><input type="text" id="assignGrade" placeholder="الصف/الفصل (اختياري)"/></div>
-        <div class="row"><input type="text" id="assignMedia" placeholder="رابط صورة/ملف/فيديو (اختياري)"/></div>
-        <div class="row"><input type="file" id="assignFile" accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"/></div>
+        <div class="row"><textarea id="assignMedia" placeholder="روابط مرفقات (سطر لكل رابط) — اختياري"></textarea></div>
+        <div class="row"><input type="file" id="assignFile" multiple accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"/></div>
         <div class="row"><button class="btn" type="submit">حفظ</button></div>
       </form>
     </div>
@@ -130,8 +133,8 @@ dialog{border:none;border-radius:16px;max-width:760px;width:96vw;padding:0;box-s
         <input type="hidden" id="examId"/>
         <div class="row"><input type="text" id="examTitle" placeholder="عنوان الاختبار" required/></div>
         <div class="row"><input type="text" id="examWeight" placeholder="الوزن (اختياري مثال 30%)"/></div>
-        <div class="row"><input type="text" id="examMedia" placeholder="رابط صورة/ملف/فيديو (اختياري)"/></div>
-        <div class="row"><input type="file" id="examFile" accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"/></div>
+        <div class="row"><textarea id="examMedia" placeholder="روابط مرفقات (سطر لكل رابط) — اختياري"></textarea></div>
+        <div class="row"><input type="file" id="examFile" multiple accept="image/*,video/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx"/></div>
         <div class="row"><button class="btn" type="submit">حفظ</button></div>
       </form>
     </div>
@@ -150,12 +153,12 @@ dialog{border:none;border-radius:16px;max-width:760px;width:96vw;padding:0;box-s
   <div class="toast" id="toast"></div>
 
 <script type="module">
+// ===== Firebase =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-// ===== Firebase =====
 const firebaseConfig = {
   apiKey: "AIzaSyD6rszy7D-XXbDnrs_vikBkGZueOpr-q0M",
   authDomain: "math-7b268.firebaseapp.com",
@@ -191,74 +194,61 @@ let isAdmin=false;
 async function checkAdmin(email){ try{ const s=await getDoc(doc(db,"config","admins")); const emails=s.exists()?(s.data().emails||[]):[]; return !!email && emails.includes(email); }catch{ return false } }
 function setAdminUI(on){ isAdmin=!!on; adminBadge.style.display=on?'inline-flex':'none'; document.querySelectorAll(".admin-only").forEach(el=>el.style.display=on?'inline-flex':'none'); }
 
-// ==== Auth ====
 btnLogin.addEventListener("click",()=>dlgAuth.showModal());
 btnLogout.addEventListener("click",async()=>{ await signOut(auth); toast("تم تسجيل الخروج"); });
 formAuth.addEventListener("submit",async (e)=>{ e.preventDefault(); try{ await signInWithEmailAndPassword(auth, authEmail.value, authPass.value); dlgAuth.close(); toast("تم تسجيل الدخول"); }catch(err){ toast("خطأ في الدخول: "+(err.code||''), false); } });
 onAuthStateChanged(auth, async (user)=>{ const email=user?.email||""; userLine.textContent=user?("سجّل الدخول: "+email):"غير مسجل دخول"; btnLogin.style.display=user?"none":"inline-flex"; btnLogout.style.display=user?"inline-flex":"none"; const admin=await checkAdmin(email); setAdminUI(admin); });
 
-// ==== Helpers ====
 function fmtDate(ts){ if(!ts) return ""; const d=ts.toDate? ts.toDate(): new Date(ts); return d.toLocaleDateString('ar',{year:'numeric',month:'long',day:'numeric'})+" "+d.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'}) }
-function normalizeYouTube(url){ try{ const u=new URL(url.trim()); if(!/youtube\.com|youtu\.be/.test(u.host)) return null; if(u.pathname.startsWith("/shorts/")){ const id=u.pathname.split("/")[2]; return `https://www.youtube.com/embed/${id}`; } const v=u.searchParams.get("v"); if(v) return `https://www.youtube.com/embed/${v}`; if(u.host.includes("youtu.be")){ const id=u.pathname.slice(1); return `https://www.youtube.com/embed/${id}`; } return null; }catch{ return null; } }
-function mediaHtml(url){ if(!url) return ""; const yt=normalizeYouTube(url); if(yt) return `<div class="media"><iframe src="${yt}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>`; if(/\.(jpg|jpeg|png|gif|webp)$/i.test(url)) return `<div class="media"><img src="${url}" alt=""></div>`; if(/\.(mp4|webm|ogg|pdf|doc|docx|ppt|pptx|xls|xlsx)$/i.test(url)) return `<div class="media"><a href="${url}" target="_blank">فتح المرفق</a></div>`; return `<div class="media"><a href="${url}" target="_blank" rel="noopener">فتح الرابط</a></div>`; }
-async function maybeUpload(file){ if(!file) return ""; if(!ENABLE_STORAGE) throw new Error("storage-disabled"); const r=ref(storage,`uploads/${Date.now()}_${file.name}`); await uploadBytes(r,file); return await getDownloadURL(r); }
-function adminBtns(type,id){ return isAdmin ? `<div class='tool'><button class='mini' data-ed='${type}' data-id='${id}'>تعديل</button><button class='mini' data-del='${type}' data-id='${id}'>حذف</button></div>` : ""; }
+function toDirectURL(raw){ if(!raw) return ""; let url=raw.trim(); try{ const u=new URL(url); const host=u.host;
+  if(/youtube\.com|youtu\.be/.test(host)){ if(u.pathname.startsWith("/shorts/")){ const id=u.pathname.split("/")[2]; return "yt-embed:https://www.youtube.com/embed/"+id; } const v=u.searchParams.get("v"); if(v) return "yt-embed:https://www.youtube.com/embed/"+v; if(host.includes("youtu.be")){ const id=u.pathname.slice(1); return "yt-embed:https://www.youtube.com/embed/"+id; } }
+  if(host.includes("drive.google.com")){ let id=""; const m=u.pathname.match(/\/file\/d\/([^/]+)/); if(m) id=m[1]; if(!id) id=u.searchParams.get("id")||""; if(id) return "https://drive.google.com/uc?export=download&id="+id; }
+  if(host.includes("dropbox.com")){ u.searchParams.delete("dl"); u.searchParams.set("raw","1"); return u.toString(); }
+  return url;
+}catch(_){ return url; }}
+function renderAttachment(url){ const direct=toDirectURL(url); if(direct.startsWith("yt-embed:")){ const src=direct.replace("yt-embed:",""); return `<div class='media'><iframe src='${src}' frameborder='0' allowfullscreen loading='lazy'></iframe></div>`; }
+  return `<div class='media'>
+    <img src='${direct}' referrerpolicy='no-referrer' loading='lazy'
+         onerror="this.style.display='none'; this.parentElement.querySelector('video').style.display='block'">
+    <video controls src='${direct}' style="display:none"
+           onerror="this.style.display='none'; this.parentElement.querySelector('.fallback').style.display='block'"></video>
+    <div class='fallback' style="display:none"><a href='${direct}' target='_blank' rel='noopener'>فتح الرابط</a></div>
+  </div>`; }
+async function uploadMany(fileInput){ const files=Array.from(fileInput.files||[]); const urls=[]; for(const f of files){ if(!ENABLE_STORAGE) throw new Error("storage-disabled"); const r=ref(storage,`uploads/${Date.now()}_${Math.random().toString(36).slice(2)}_${f.name}`); await uploadBytes(r,f); urls.push(await getDownloadURL(r)); } return urls; }
+function parseLinks(textarea){ return (textarea.value||"").split(/\n+/).map(s=>s.trim()).filter(Boolean); }
 
-// ==== Feed ====
 let allPosts=[];
-function renderFeed(){ const q=(search.value||"").trim(); const t=(typeFilter.value||""); const list=allPosts.filter(p=>(!t||p.type===t)&&((p.text||"")+ (p.media||"")).includes(q)); feed.innerHTML=list.length? "":'<div class="empty">لا توجد منشورات</div>'; list.forEach(p=>{ const el=document.createElement("div"); el.className="post"; el.innerHTML=`<div><div><span class="tag">${p.type||"عام"}</span></div><div class="meta">${fmtDate(p.createdAt)}</div><div>${p.text||""}</div>${mediaHtml(p.media||"")}${adminBtns('post',p.id)}</div>`; feed.appendChild(el); }); count.textContent=list.length?("العدد: "+list.length):""; }
+function postHTML(p){ const media = Array.isArray(p.media)? p.media : (p.media? [p.media] : []); const mediaHtml = media.map(renderAttachment).join(""); return `<div class="post">
+  <div><div><span class="tag">${p.type||"عام"}</span></div>
+  <div class="meta">${fmtDate(p.createdAt)}</div>
+  <div>${p.text||""}</div>
+  ${mediaHtml}
+  ${isAdmin?`<div class='tool'><button class='mini' data-ed='post' data-id='${p.id}'>تعديل</button><button class='mini' data-del='post' data-id='${p.id}'>حذف</button></div>`:""}
+  </div></div>`; }
+function renderFeed(){ const q=(search.value||"").trim(); const t=(typeFilter.value||""); const list=allPosts.filter(p=>(!t||p.type===t)&&((p.text||"")+ (Array.isArray(p.media)?p.media.join(" "):p.media||"")).includes(q)); feed.innerHTML=list.length? "":'<div class="empty">لا توجد منشورات</div>'; list.forEach(p=> feed.insertAdjacentHTML('beforeend', postHTML(p)) ); count.textContent=list.length?("العدد: "+list.length):""; }
 onSnapshot(query(collection(db,"posts"), orderBy("createdAt","desc")), snap=>{ allPosts=snap.docs.map(d=>({id:d.id, ...d.data()})); renderFeed(); });
 search.addEventListener("input",renderFeed); typeFilter.addEventListener("change",renderFeed);
 
-// ==== Lists ====
-onSnapshot(query(collection(db,"assignments"), orderBy("createdAt","desc")), snap=>{ listAssignments.innerHTML=""; if(snap.empty){ listAssignments.innerHTML='<div class="empty">لا توجد واجبات</div>'; return; } snap.forEach(d=>{ const a=d.data(); const li=document.createElement("li"); li.innerHTML=`<span>${a.title}${a.grade?(" — "+a.grade):""}${a.media?('<br><a href="'+a.media+'" target="_blank">فتح المرفق</a>'):''}</span><span class="pill">${fmtDate(a.createdAt)}</span>${adminBtns('assign', d.id)}`; listAssignments.appendChild(li); }); });
-onSnapshot(query(collection(db,"exams"), orderBy("createdAt","desc")), snap=>{ listExams.innerHTML=""; if(snap.empty){ listExams.innerHTML='<div class="empty">لا توجد اختبارات</div>'; return; } snap.forEach(d=>{ const e=d.data(); const li=document.createElement("li"); li.innerHTML=`<span>${e.title}${e.weight?(' • '+e.weight):''}${e.media?('<br><a href="'+e.media+'" target="_blank">فتح المرفق</a>'):''}</span><span class="pill">${fmtDate(e.createdAt)}</span>${adminBtns('exam', d.id)}`; listExams.appendChild(li); }); });
+function liWithControls(type, id, leftHTML, ts){ return `<li>
+  <span>${leftHTML}</span>
+  <span>
+    <span class="pill">${fmtDate(ts)} </span>
+    ${isAdmin?`<span class="tool"><button class='mini' data-ed='${type}' data-id='${id}'>تعديل</button><button class='mini' data-del='${type}' data-id='${id}'>حذف</button></span>`:""}
+  </span></li>`; }
+onSnapshot(query(collection(db,"assignments"), orderBy("createdAt","desc")), snap=>{ listAssignments.innerHTML=""; if(snap.empty){ listAssignments.innerHTML='<div class="empty">لا توجد واجبات</div>'; return; } snap.forEach(d=>{ const a=d.data(); const media = Array.isArray(a.media)?a.media:(a.media?[a.media]:[]); const blocks = media.map(u=>renderAttachment(u)).join(""); listAssignments.insertAdjacentHTML('beforeend', liWithControls('assign', d.id, `${a.title}${a.grade?(" — "+a.grade):""}${blocks}`, a.createdAt)); }); });
+onSnapshot(query(collection(db,"exams"), orderBy("createdAt","desc")), snap=>{ listExams.innerHTML=""; if(snap.empty){ listExams.innerHTML='<div class="empty">لا توجد اختبارات</div>'; return; } snap.forEach(d=>{ const e=d.data(); const media = Array.isArray(e.media)?e.media:(e.media?[e.media]:[]); const blocks = media.map(u=>renderAttachment(u)).join(""); listExams.insertAdjacentHTML('beforeend', liWithControls('exam', d.id, `${e.title}${e.weight?(' • '+e.weight):''}${blocks}`, e.createdAt)); }); });
 
-// ==== Open modals ====
 openCreatePost.addEventListener("click",()=>{ if(!isAdmin) return toast("خاص بالمشرف فقط",false); postId.value=""; postText.value=""; postMedia.value=""; postType.value="عام"; document.getElementById("postDlgTitle").textContent="منشور جديد"; dlgPost.showModal(); });
 openCreateAssign.addEventListener("click",()=>{ if(!isAdmin) return toast("خاص بالمشرف فقط",false); assignId.value=""; assignTitle.value=""; assignGrade.value=""; assignMedia.value=""; document.getElementById("assignDlgTitle").textContent="إضافة واجب"; dlgAssign.showModal(); });
 openCreateExam.addEventListener("click",()=>{ if(!isAdmin) return toast("خاص بالمشرف فقط",false); examId.value=""; examTitle.value=""; examWeight.value=""; examMedia.value=""; document.getElementById("examDlgTitle").textContent="إضافة اختبار"; dlgExam.showModal(); });
 
-// ==== Save (Create/Update/Delete) ====
-formPost.addEventListener("submit", async (e)=>{ e.preventDefault(); if(!isAdmin) return; try{ let mediaURL=(postMedia.value||"").trim(); if(postFile.files[0]){ try{ mediaURL = await maybeUpload(postFile.files[0]); }catch(upErr){ if(upErr.message==="storage-disabled") toast("الرفع متوقف: فعّل Storage أو استخدم رابط", false); else throw upErr; } } const data={ text:postText.value.trim(), media:mediaURL, type:postType.value, createdAt: serverTimestamp() }; if(postId.value){ await updateDoc(doc(db,"posts",postId.value), data); toast("تم تحديث المنشور"); } else { await addDoc(collection(db,"posts"), data); toast("تم نشر المنشور"); } dlgPost.close(); }catch(err){ console.error(err); toast("تعذر الحفظ: "+(err.code||err.message), false); } });
+async function collectMedia(textarea, fileInput){ let urls=parseLinks(textarea); if(fileInput.files.length>0){ try{ urls = urls.concat(await uploadMany(fileInput)); }catch(upErr){ if(upErr.message==='storage-disabled') toast('الرفع متوقف: فعّل Storage أو استخدم روابط', false); else throw upErr; } } return urls; }
+formPost.addEventListener("submit", async (e)=>{ e.preventDefault(); if(!isAdmin) return; try{ const mediaList = await collectMedia(postMedia, postFile); const data={ text:postText.value.trim(), media:mediaList, type:postType.value, createdAt: serverTimestamp() }; if(postId.value){ await updateDoc(doc(db,"posts",postId.value), data); toast("تم تحديث المنشور"); } else { await addDoc(collection(db,"posts"), data); toast("تم نشر المنشور"); } dlgPost.close(); }catch(err){ console.error(err); toast("تعذر الحفظ: "+(err.code||err.message), false); } });
+formAssign.addEventListener("submit", async (e)=>{ e.preventDefault(); if(!isAdmin) return; try{ const mediaList = await collectMedia(assignMedia, assignFile); const data={ title:assignTitle.value.trim(), grade:assignGrade.value.trim(), media:mediaList, createdAt: serverTimestamp() }; if(assignId.value){ await updateDoc(doc(db,"assignments",assignId.value), data); toast("تم تحديث الواجب"); } else { await addDoc(collection(db,"assignments"), data); toast("تم حفظ الواجب"); } dlgAssign.close(); }catch(err){ console.error(err); toast("تعذر الحفظ: "+(err.code||err.message), false); } });
+formExam.addEventListener("submit", async (e)=>{ e.preventDefault(); if(!isAdmin) return; try{ const mediaList = await collectMedia(examMedia, examFile); const data={ title:examTitle.value.trim(), weight:examWeight.value.trim(), media:mediaList, createdAt: serverTimestamp() }; if(examId.value){ await updateDoc(doc(db,"exams",examId.value), data); toast("تم تحديث الاختبار"); } else { await addDoc(collection(db,"exams"), data); toast("تم حفظ الاختبار"); } dlgExam.close(); }catch(err){ console.error(err); toast("تعذر الحفظ: "+(err.code||err.message), false); } });
 
-formAssign.addEventListener("submit", async (e)=>{ e.preventDefault(); if(!isAdmin) return; try{ let mediaURL=(assignMedia.value||"").trim(); if(assignFile.files[0]){ try{ mediaURL = await maybeUpload(assignFile.files[0]); }catch(upErr){ if(upErr.message==="storage-disabled") toast("الرفع متوقف: فعّل Storage أو استخدم رابط", false); else throw upErr; } } const data={ title:assignTitle.value.trim(), grade:assignGrade.value.trim(), media:mediaURL, createdAt: serverTimestamp() }; if(assignId.value){ await updateDoc(doc(db,"assignments",assignId.value), data); toast("تم تحديث الواجب"); } else { await addDoc(collection(db,"assignments"), data); toast("تم حفظ الواجب"); } dlgAssign.close(); }catch(err){ console.error(err); toast("تعذر الحفظ: "+(err.code||err.message), false); } });
+document.addEventListener('click', async (e)=>{ const ed=e.target.getAttribute('data-ed'); const del=e.target.getAttribute('data-del'); const id=e.target.getAttribute('data-id'); if(ed) { if(!isAdmin) return; try { const c=ed==='post'?'posts': ed==='assign'?'assignments':'exams'; const snap=await getDoc(doc(db,c,id)); if(!snap.exists()) return; const d=snap.data(); if(ed==='post') { postId.value=id; postText.value=d.text||''; postMedia.value=(Array.isArray(d.media)?d.media.join('\n'):(d.media||'')); postType.value=d.type||'عام'; dlgPost.showModal(); } else if(ed==='assign') { assignId.value=id; assignTitle.value=d.title||''; assignGrade.value=d.grade||''; assignMedia.value=(Array.isArray(d.media)?d.media.join('\n'):(d.media||'')); dlgAssign.showModal(); } else if(ed==='exam') { examId.value=id; examTitle.value=d.title||''; examWeight.value=d.weight||''; examMedia.value=(Array.isArray(d.media)?d.media.join('\n'):(d.media||'')); dlgExam.showModal(); } } catch(err){ toast('تعذر فتح التعديل: '+(err.code||err.message), false); } } if(del) { if(!isAdmin) return; if(!confirm('حذف نهائي؟')) return; try { const c=del==='post'?'posts': del==='assign'?'assignments':'exams'; await deleteDoc(doc(db,c,id)); toast('تم الحذف', true); } catch(err){ toast('تعذر الحذف: '+(err.code||err.message), false); } } });
 
-formExam.addEventListener("submit", async (e)=>{ e.preventDefault(); if(!isAdmin) return; try{ let mediaURL=(examMedia.value||"").trim(); if(examFile.files[0]){ try{ mediaURL = await maybeUpload(examFile.files[0]); }catch(upErr){ if(upErr.message==="storage-disabled") toast("الرفع متوقف: فعّل Storage أو استخدم رابط", false); else throw upErr; } } const data={ title:examTitle.value.trim(), weight:examWeight.value.trim(), media:mediaURL, createdAt: serverTimestamp() }; if(examId.value){ await updateDoc(doc(db,"exams",examId.value), data); toast("تم تحديث الاختبار"); } else { await addDoc(collection(db,"exams"), data); toast("تم حفظ الاختبار"); } dlgExam.close(); }catch(err){ console.error(err); toast("تعذر الحفظ: "+(err.code||err.message), false); } });
-
-// === Edit/Delete handlers ===
-document.addEventListener('click', async (e)=>{
-  const ed = e.target.getAttribute('data-ed');
-  const del = e.target.getAttribute('data-del');
-  const id = e.target.getAttribute('data-id');
-  if(ed) {
-    if(!isAdmin) return;
-    try {
-      const c = ed==='post'?'posts': ed==='assign'?'assignments':'exams';
-      const snap = await getDoc(doc(db,c,id));
-      if(!snap.exists()) return;
-      const d = snap.data();
-      if(ed==='post') {
-        postId.value=id; postText.value=d.text||''; postMedia.value=d.media||''; postType.value=d.type||'عام'; dlgPost.showModal();
-      } else if(ed==='assign') {
-        assignId.value=id; assignTitle.value=d.title||''; assignGrade.value=d.grade||''; assignMedia.value=d.media||''; dlgAssign.showModal();
-      } else if(ed==='exam') {
-        examId.value=id; examTitle.value=d.title||''; examWeight.value=d.weight||''; examMedia.value=d.media||''; dlgExam.showModal();
-      }
-    } catch(err){ toast('تعذر فتح التعديل: '+(err.code||err.message), false); }
-  }
-  if(del) {
-    if(!isAdmin) return;
-    if(!confirm('حذف نهائي؟')) return;
-    try {
-      const c = del==='post'?'posts': del==='assign'?'assignments':'exams';
-      await deleteDoc(doc(db,c,id));
-      toast('تم الحذف', true);
-    } catch(err){ toast('تعذر الحذف: '+(err.code||err.message), false); }
-  }
-});
-
-// Panels
 btnAssignments.addEventListener("click",()=>panelAssignments.showModal());
 btnExams.addEventListener("click",()=>panelExams.showModal());
 </script>
